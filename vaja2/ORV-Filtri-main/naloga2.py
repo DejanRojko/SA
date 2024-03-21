@@ -18,9 +18,19 @@ def konvolucija(slika, jedro):
 
     return output
 
-def filtriraj_z_gaussovim_jedrom(slika,sigma):
+def filtriraj_z_gaussovim_jedrom(slika, sigma):
     '''Filtrira sliko z Gaussovim jedrom..'''
-    pass
+
+    velikost_jedra = int(2 * sigma) * 2 + 1
+    k = (velikost_jedra - 1) / 2
+    jedro = np.zeros((velikost_jedra, velikost_jedra))
+
+    for i in range(velikost_jedra):
+        for j in range(velikost_jedra):
+            jedro[i, j] = (1 / (2 * np.pi * sigma ** 2)) * np.exp(-(((i - k - 1) ** 2) + ((j - k - 1) ** 2)) / (2 * sigma ** 2))
+
+    return jedro
+
 
 def filtriraj_sobel_smer(slika):
     '''Filtrira sliko z Sobelovim jedrom in označi gradiente v orignalni sliki glede na ustrezen pogoj.'''
@@ -31,14 +41,17 @@ if __name__ == '__main__':
     # Load an image
     slika = cv.imread('.utils/lenna.png', cv.IMREAD_GRAYSCALE).astype(np.float32)
 
-    # Define a kernel
-    jedro = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], dtype=np.float32)
+    sigma = float(10)
 
-    # Apply the convolution operation
+    # Apply the Gaussian filter
+    jedro = filtriraj_z_gaussovim_jedrom(slika, sigma)
     output = konvolucija(slika, jedro)
 
+    # Normalize the output for display
+    output_clipped = np.clip(output, 0, 255).astype(np.uint8)
+
     # Display the original and filtered images
-    cv.imshow('Original Image', slika)
-    cv.imshow('Filtered Image', output)
+    cv.imshow('Original Image', slika.astype(np.uint8))
+    cv.imshow('Filtered Image', output_clipped)
     cv.waitKey(0)
     cv.destroyAllWindows()
