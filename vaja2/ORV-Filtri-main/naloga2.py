@@ -34,24 +34,37 @@ def filtriraj_z_gaussovim_jedrom(slika, sigma):
 
 def filtriraj_sobel_smer(slika):
     '''Filtrira sliko z Sobelovim jedrom in označi gradiente v orignalni sliki glede na ustrezen pogoj.'''
-    pass
+
+    sobel_horizontalno_jedro = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+
+    # Apply the convolution operation
+    output = konvolucija(slika, sobel_horizontalno_jedro)
+
+    return output
+
 
 
 if __name__ == '__main__':
     # Load an image
     slika = cv.imread('.utils/lenna.png', cv.IMREAD_GRAYSCALE).astype(np.float32)
+    slika_color = cv.imread('.utils/lenna.png')
 
     sigma = float(10)
 
-    # Apply the Gaussian filter
     jedro = filtriraj_z_gaussovim_jedrom(slika, sigma)
-    output = konvolucija(slika, jedro)
+    output_gauss = konvolucija(slika, jedro)
 
-    # Normalize the output for display
-    output_clipped = np.clip(output, 0, 255).astype(np.uint8)
+    output_sobel_x = filtriraj_sobel_smer(slika)
 
-    # Display the original and filtered images
+    mask = output_sobel_x > 150
+
+    slika_color[mask] = [0, 255, 0]
+
+    output_gaussian_clipped = np.clip(output_gauss, 0, 255).astype(np.uint8)
+
+    # Display the original, Gaussian filtered, and Sobel filtered images
     cv.imshow('Original Image', slika.astype(np.uint8))
-    cv.imshow('Filtered Image', output_clipped)
+    cv.imshow('Gaussian Filtered Image', output_gaussian_clipped)
+    cv.imshow('Image with Strong Gradients Colored Green', slika_color)
     cv.waitKey(0)
     cv.destroyAllWindows()
