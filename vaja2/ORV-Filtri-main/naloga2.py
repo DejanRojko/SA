@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 
+
 def konvolucija(slika, jedro):
     '''Izvede konvolucijo nad sliko. Brez uporabe funkcije cv.filter2D, ali katerekoli druge funkcije, ki izvaja konvolucijo.
     Funkcijo implementirajte sami z uporabo zank oz. vektorskega računanja.'''
@@ -18,6 +19,7 @@ def konvolucija(slika, jedro):
 
     return output
 
+
 def filtriraj_z_gaussovim_jedrom(slika, sigma):
     '''Filtrira sliko z Gaussovim jedrom..'''
 
@@ -27,7 +29,8 @@ def filtriraj_z_gaussovim_jedrom(slika, sigma):
 
     for i in range(velikost_jedra):
         for j in range(velikost_jedra):
-            jedro[i, j] = (1 / (2 * np.pi * sigma ** 2)) * np.exp(-(((i - k - 1) ** 2) + ((j - k - 1) ** 2)) / (2 * sigma ** 2))
+            jedro[i, j] = (1 / (2 * np.pi * sigma ** 2)) * np.exp(
+                -(((i - k - 1) ** 2) + ((j - k - 1) ** 2)) / (2 * sigma ** 2))
 
     return jedro
 
@@ -43,9 +46,7 @@ def filtriraj_sobel_smer(slika):
     return output
 
 
-
 if __name__ == '__main__':
-    # Load an image
     slika = cv.imread('.utils/lenna.png', cv.IMREAD_GRAYSCALE).astype(np.float32)
     slika_color = cv.imread('.utils/lenna.png')
 
@@ -62,7 +63,6 @@ if __name__ == '__main__':
 
     output_gaussian_clipped = np.clip(output_gauss, 0, 255).astype(np.uint8)
 
-    # Display the original, Gaussian filtered, and Sobel filtered images
     cv.imshow('Original Image', slika.astype(np.uint8))
     cv.imshow('Gaussian Filtered Image', output_gaussian_clipped)
     cv.imshow('Image with Strong Gradients Colored Green', slika_color)
