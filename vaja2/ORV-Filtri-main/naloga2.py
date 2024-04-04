@@ -10,12 +10,14 @@ def konvolucija(slika, jedro):
     visina_jedra, sirina_jedra = jedro.shape
     pad_v, pad_s = visina_jedra // 2, sirina_jedra // 2
 
-    slika_padded = np.pad(slika, ((pad_v, pad_v), (pad_s, pad_s)), mode='constant')
+    slika_padded = np.pad(slika, ((pad_v, pad_v), (pad_s, pad_s)))
     output = np.zeros_like(slika)
 
     for y in range(visina_slike):
         for x in range(sirina_slike):
-            output[y, x] = (jedro * slika_padded[y: y + visina_jedra, x: x + sirina_jedra]).sum()
+            crop = slika_padded[y: y + visina_jedra, x: x + sirina_jedra]
+            kon = jedro * crop
+            output[y, x] = np.sum(kon)
 
     return output
 
@@ -40,7 +42,6 @@ def filtriraj_sobel_smer(slika):
 
     sobel_horizontalno_jedro = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
 
-    # Apply the convolution operation
     output = konvolucija(slika, sobel_horizontalno_jedro)
 
     return output
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     slika = cv.imread('.utils/lenna.png', cv.IMREAD_GRAYSCALE).astype(np.float32)
     slika_color = cv.imread('.utils/lenna.png')
 
-    sigma = float(10)
+    sigma = float(1)
 
     jedro = filtriraj_z_gaussovim_jedrom(slika, sigma)
     output_gauss = konvolucija(slika, jedro)
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     output_gaussian_clipped = np.clip(output_gauss, 0, 255).astype(np.uint8)
 
     cv.imshow('Original Image', slika.astype(np.uint8))
-    cv.imshow('Gaussian Filtered Image', output_gaussian_clipped)
-    cv.imshow('Image with Strong Gradients Colored Green', slika_color)
+    cv.imshow('Gauss', output_gaussian_clipped)
+    cv.imshow('Zelena', slika_color)
     cv.waitKey(0)
     cv.destroyAllWindows()
