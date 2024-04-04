@@ -50,6 +50,9 @@ jobs:
             echo "Error: Environment setup failed. Check setup logs." > error.txt
           fi
         continue-on-error: true
+        
+      - name: Print PATH
+        run: echo $PATH
 
       - name: Run tests
         run: |
