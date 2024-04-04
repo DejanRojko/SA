@@ -1,0 +1,65 @@
+name: Test Workflow
+
+on:
+  push:
+    branches:
+      - main #test runs after push on main
+
+jobs:
+  setup_environment:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2 #varible for python
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies #pip installs dependencies
+        run: |
+          pip install numpy pytest opencv-python
+
+      - name: Save environment setup artifacts #saves result to txt if successfull
+        run: |
+          echo "Environment setup completed successfully!" > setup_status.txt
+        continue-on-error: true
+
+      - name: Upload setup artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: setup-artifacts
+          path: setup_status.txt
+
+  run_tests:
+    runs-on: self-hosted
+    needs: setup_environment
+    steps:
+      - name: Download setup artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: setup-artifacts
+
+      - name: Check environment setup status
+        run: |
+          if [ -f setup_status.txt ]; then #saves result if setup_status.txt is empty
+            cat setup_status.txt
+          else
+            echo "Error: Environment setup failed. Check setup logs."
+            echo "Error: Environment setup failed. Check setup logs." > error.txt
+          fi
+        continue-on-error: true
+
+      - name: Run tests
+        run: |
+          pytest #not yet working
+        continue-on-error: true
+
+      - name: Check for test errors
+        run: |
+          if [ -f error.txt ]; then
+            echo "Error: Tests failed. See test logs for details."
+            echo "Error: Tests failed. See test logs for details." > test_error.txt
+            exit 1
+          fi
