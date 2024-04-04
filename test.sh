@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Check if Python is installed
-echo "Checking if Python is installed..."
-if command -v python &> /dev/null; then
-    echo "Python is installed."
+# Check if Python 3 is installed
+echo "Checking if Python 3 is installed..."
+if command -v python3 &> /dev/null; then
+    echo "Python 3 is installed."
 else
-    echo "Error: Python is not installed."
+    echo "Error: Python 3 is not installed."
     exit 1
 fi
 
-echo "
+echo "All required dependencies are installed."
 
