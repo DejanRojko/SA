@@ -53,7 +53,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest #not yet working
+          ./run_custom_tests.sh
         continue-on-error: true
 
       - name: Check for test errors
