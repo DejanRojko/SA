@@ -53,7 +53,7 @@ jobs:
 
       - name: Run tests  # Zaženi teste
         run: |
-          test.py
+          pytest test.py
         continue-on-error: true  # Nadaljuj tudi ob napaki
 
       - name: Check for test errors  # Preveri, ali so se pri testiranju pojavile napake
