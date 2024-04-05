@@ -3,7 +3,7 @@ name: Test Workflow  # Ime delovnega toka
 on:
   push:
     branches:
-      - main # test se zažene po potisku na glavno vejo
+      - master # test se zažene po potisku na glavno vejo
 
 jobs:
   setup_environment:
