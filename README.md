@@ -7,4 +7,4 @@ Okostje kode najdete v datoteki naloga2.py, kjer so že definirane funkcije, ki 
 
 Koda je preizkušena na OS Linux, za Windows bo morda potrebna kakšna prilagoditev.
 
-Držite se predpisane strukture projekta..
+Držite se predpisane strukture projekta.
